@@ -254,6 +254,64 @@
     }
   ],
   "restart_policy": "always"
+},
+{
+  "type": 1,
+  "title": "Upscayl (AI Image Upscaler)",
+  "name": "upscayl",
+  "description": "Self-hosted Upscayl server for AI upscaling of photos. Mount your images and models; run upscales from the web UI or CLI.",
+  "note": "If you need GPU acceleration, enable GPU support when creating the container in Portainer (set runtime or device requests in the UI). Do not add host.gpus to the template file.",
+  "categories": [
+    "AI",
+    "Image",
+    "Upscale"
+  ],
+  "platform": "linux",
+  "logo": "",
+  "image": "upscayl/upscayl:latest",
+  "ports": [
+    "3000:3000/tcp"
+  ],
+  "volumes": [
+    {
+      "container": "/app/models",
+      "bind": "upscayl_models",
+      "type": "volume"
+    },
+    {
+      "container": "/app/input",
+      "bind": "upscayl_input",
+      "type": "volume"
+    },
+    {
+      "container": "/app/output",
+      "bind": "upscayl_output",
+      "type": "volume"
+    },
+    {
+      "container": "/config",
+      "bind": "upscayl_config",
+      "type": "volume"
+    }
+  ],
+  "env": [
+    {
+      "name": "PUID",
+      "label": "User ID",
+      "default": "1000"
+    },
+    {
+      "name": "PGID",
+      "label": "Group ID",
+      "default": "1000"
+    },
+    {
+      "name": "TZ",
+      "label": "Timezone",
+      "default": "UTC"
+    }
+  ],
+  "restart_policy": "unless-stopped"
 }
   ]
 }
