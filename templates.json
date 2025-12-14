@@ -1,26 +1,28 @@
 {
-  "version": "2",
+  "version": "3",
   "templates": [
     {
-      "type": "container",
+      "type": 1,
       "title": "InvokeAI (GPU Optimized)",
-      "description": "Local AI image generation with full NVIDIA GPU acceleration (CUDA).",
-      "note": "Requires NVIDIA GPU + Docker Desktop GPU support enabled.",
-      "categories": ["AI", "Image Generation", "GPU"],
+      "name": "invokeai",
+      "description": "Local AI image generation with NVIDIA GPU acceleration (requires Docker Desktop GPU support).",
+      "note": "Ensure Docker Desktop GPU support is enabled and NVIDIA drivers are installed on the host.",
+      "categories": [
+        "AI",
+        "Image Generation",
+        "GPU"
+      ],
       "platform": "linux",
       "logo": "",
       "image": "ghcr.io/invoke-ai/invokeai:latest",
       "ports": [
-        {
-          "container": 9090,
-          "host": 9090
-        }
+        "9090:9090/tcp"
       ],
       "volumes": [
         {
           "container": "/data",
           "bind": "invokeai_data",
-          "readonly": false
+          "type": "volume"
         }
       ],
       "env": [
@@ -30,65 +32,57 @@
           "default": "web"
         }
       ],
-      "restart_policy": "always",
-      "privileged": false,
-      "devices": [],
-      "host": {
-        "gpus": "all"
-      }
+      "restart_policy": "always"
     },
-
     {
-      "type": "container",
+      "type": 1,
       "title": "ComfyUI (GPU)",
+      "name": "comfyui",
       "description": "Node-based Stable Diffusion workflow UI with GPU acceleration.",
       "note": "Bind a models directory if you want to re-use weights.",
-      "categories": ["AI", "Image Generation", "GPU"],
+      "categories": [
+        "AI",
+        "Image Generation",
+        "GPU"
+      ],
       "platform": "linux",
       "logo": "",
       "image": "ghcr.io/comfyanonymous/comfyui:latest",
       "ports": [
-        {
-          "container": 8188,
-          "host": 8188
-        }
+        "8188:8188/tcp"
       ],
       "volumes": [
         {
           "container": "/root/.cache/comfyui",
           "bind": "comfyui_data",
-          "readonly": false
+          "type": "volume"
         }
       ],
       "env": [],
-      "restart_policy": "always",
-      "privileged": false,
-      "devices": [],
-      "host": {
-        "gpus": "all"
-      }
+      "restart_policy": "always"
     },
-
     {
-      "type": "container",
+      "type": 1,
       "title": "Automatic1111 Stable Diffusion WebUI (GPU)",
-      "description": "Classic Stable Diffusion WebUI with full GPU support.",
-      "note": "For testing; consider InvokeAI/ComfyUI for long-term workflows.",
-      "categories": ["AI", "Image Generation", "GPU"],
+      "name": "automatic1111",
+      "description": "Stable Diffusion WebUI with GPU support.",
+      "note": "Consider xformers or other runtime args for performance; training is VRAM intensive.",
+      "categories": [
+        "AI",
+        "Image Generation",
+        "GPU"
+      ],
       "platform": "linux",
       "logo": "",
       "image": "ghcr.io/abraham-ai/stable-diffusion-webui:latest",
       "ports": [
-        {
-          "container": 7860,
-          "host": 7860
-        }
+        "7860:7860/tcp"
       ],
       "volumes": [
         {
           "container": "/data",
           "bind": "a1111_data",
-          "readonly": false
+          "type": "volume"
         }
       ],
       "env": [
@@ -98,65 +92,57 @@
           "default": "--xformers"
         }
       ],
-      "restart_policy": "unless-stopped",
-      "privileged": false,
-      "devices": [],
-      "host": {
-        "gpus": "all"
-      }
+      "restart_policy": "unless-stopped"
     },
-
     {
-      "type": "container",
+      "type": 1,
       "title": "Ollama (GPU LLM Runtime)",
-      "description": "Local LLM runtime with GPU acceleration for models like Llama, Mistral, etc.",
+      "name": "ollama",
+      "description": "Local LLM runtime with GPU acceleration for models like Llama and Mistral.",
       "note": "Use ollama CLI or compatible UIs to interact with models.",
-      "categories": ["AI", "LLM", "GPU"],
+      "categories": [
+        "AI",
+        "LLM",
+        "GPU"
+      ],
       "platform": "linux",
       "logo": "",
       "image": "ollama/ollama:latest",
       "ports": [
-        {
-          "container": 11434,
-          "host": 11434
-        }
+        "11434:11434/tcp"
       ],
       "volumes": [
         {
           "container": "/root/.ollama",
           "bind": "ollama_data",
-          "readonly": false
+          "type": "volume"
         }
       ],
       "env": [],
-      "restart_policy": "always",
-      "privileged": false,
-      "devices": [],
-      "host": {
-        "gpus": "all"
-      }
+      "restart_policy": "always"
     },
-
     {
-      "type": "container",
+      "type": 1,
       "title": "text-generation-webui (GPU)",
+      "name": "text-generation-webui",
       "description": "Web UI for running and experimenting with text-generation models on GPU.",
       "note": "Ideal for managing multiple GGUF or HF models behind a graphical interface.",
-      "categories": ["AI", "LLM", "GPU"],
+      "categories": [
+        "AI",
+        "LLM",
+        "GPU"
+      ],
       "platform": "linux",
       "logo": "",
       "image": "ghcr.io/oobabooga/text-generation-webui:latest",
       "ports": [
-        {
-          "container": 7861,
-          "host": 7861
-        }
+        "7861:7861/tcp"
       ],
       "volumes": [
         {
           "container": "/data",
           "bind": "tgwui_data",
-          "readonly": false
+          "type": "volume"
         }
       ],
       "env": [
@@ -166,20 +152,19 @@
           "default": "--listen --xformers"
         }
       ],
-      "restart_policy": "unless-stopped",
-      "privileged": false,
-      "devices": [],
-      "host": {
-        "gpus": "all"
-      }
+      "restart_policy": "unless-stopped"
     },
-
     {
-      "type": "container",
+      "type": 1,
       "title": "Whisper (GPU Speech-to-Text)",
-      "description": "GPU-accelerated OpenAI Whisper for transcription and translation.",
+      "name": "whisper",
+      "description": "GPU-accelerated Whisper for transcription and translation.",
       "note": "Mount an audio directory to /audio for batch jobs.",
-      "categories": ["AI", "Audio", "GPU"],
+      "categories": [
+        "AI",
+        "Audio",
+        "GPU"
+      ],
       "platform": "linux",
       "logo": "",
       "image": "ghcr.io/ggerganov/whisper.cpp:latest",
@@ -188,47 +173,38 @@
         {
           "container": "/audio",
           "bind": "whisper_audio",
-          "readonly": false
+          "type": "volume"
         }
       ],
       "env": [],
-      "restart_policy": "unless-stopped",
-      "privileged": false,
-      "devices": [],
-      "host": {
-        "gpus": "all"
-      }
+      "restart_policy": "unless-stopped"
     },
-
     {
-      "type": "container",
+      "type": 1,
       "title": "Kohya SS (GPU LoRA Trainer)",
+      "name": "kohya_ss",
       "description": "GPU-accelerated training UI for LoRA and fine-tuning Stable Diffusion models.",
-      "note": "Training is VRAM-intensive; best suited for your 3090 Ti.",
-      "categories": ["AI", "Training", "GPU"],
+      "note": "Training is VRAM-intensive; best suited for high-memory GPUs like 3090 Ti.",
+      "categories": [
+        "AI",
+        "Training",
+        "GPU"
+      ],
       "platform": "linux",
       "logo": "",
       "image": "ghcr.io/bmaltais/kohya_ss:latest",
       "ports": [
-        {
-          "container": 7862,
-          "host": 7862
-        }
+        "7862:7862/tcp"
       ],
       "volumes": [
         {
           "container": "/workspace",
           "bind": "kohya_workspace",
-          "readonly": false
+          "type": "volume"
         }
       ],
       "env": [],
-      "restart_policy": "unless-stopped",
-      "privileged": false,
-      "devices": [],
-      "host": {
-        "gpus": "all"
-      }
+      "restart_policy": "unless-stopped"
     }
   ]
 }
