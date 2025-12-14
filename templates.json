@@ -205,6 +205,55 @@
       ],
       "env": [],
       "restart_policy": "unless-stopped"
+    },
+    {
+  "type": 1,
+  "title": "Darktable (GUI Photo Editor)",
+  "name": "darktable",
+  "description": "Darktable running in a container with GUI access (RDP / web gateway). Map your photo folders and config for persistent storage.",
+  "note": "Adjust PUID, PGID, TZ and volume names to match your host. Do not expose RDP to the public internet without a VPN or reverse proxy.",
+  "categories": [
+    "Photography",
+    "Editor",
+    "GUI"
+  ],
+  "platform": "linux",
+  "logo": "",
+  "image": "lscr.io/linuxserver/darktable:latest",
+  "ports": [
+    "3001:3001/tcp",
+    "3389:3389/tcp"
+  ],
+  "volumes": [
+    {
+      "container": "/config",
+      "bind": "darktable_config",
+      "type": "volume"
+    },
+    {
+      "container": "/images",
+      "bind": "darktable_images",
+      "type": "volume"
     }
+  ],
+  "env": [
+    {
+      "name": "PUID",
+      "label": "User ID",
+      "default": "1000"
+    },
+    {
+      "name": "PGID",
+      "label": "Group ID",
+      "default": "1000"
+    },
+    {
+      "name": "TZ",
+      "label": "Timezone",
+      "default": "America/Chicago"
+    }
+  ],
+  "restart_policy": "always"
+}
   ]
 }
